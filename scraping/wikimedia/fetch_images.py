@@ -56,14 +56,13 @@ def fetch_and_save_images(json_file_path, output_dir):
         if meta_data_file_path.exists():
             _logger.info(f"Metadata already exists for {uuid}")
         else:
-            metadata_response = requests.get(metadata_url, headers=headers)
+            metadata_response = requests.get(metadata_url)
             if metadata_response.status_code == 200:
                 with open(meta_data_file_path, "w", encoding="utf-8") as f:
                     f.write(metadata_response.text)
                 _logger.info(f"Saved metadata for {uuid}")
             else:
                 _logger.warning(f"Failed to fetch metadata for {uuid}")
-                print(metadata_response.text)
                 print(metadata_response.status_code)
 
         # Save original JSON data
