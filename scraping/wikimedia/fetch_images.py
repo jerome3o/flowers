@@ -36,23 +36,35 @@ def fetch_and_save_images(json_file_path, output_dir):
         uuid_dir.mkdir(exist_ok=True)
 
         # Fetch and save image
-        image_response = requests.get(image_url, headers=headers)
-        if image_response.status_code == 200:
-            image_extension = os.path.splitext(urlparse(image_url).path)[1]
-            with open(uuid_dir / f"image{image_extension}", "wb") as f:
-                f.write(image_response.content)
-            _logger.info(f"Saved image for {uuid}")
+
+        image_extension = os.path.splitext(urlparse(image_url).path)[1]
+        image_file_path = uuid_dir / f"image{image_extension}"
+
+        if image_file_path.exists():
+            _logger.info(f"Image already exists for {uuid}")
         else:
-            _logger.warning(f"Failed to fetch image for {uuid}")
+            image_response = requests.get(image_url, headers=headers)
+            if image_response.status_code == 200:
+                with open(image_file_path, "wb") as f:
+                    f.write(image_response.content)
+                _logger.info(f"Saved image for {uuid}")
+            else:
+                _logger.warning(f"Failed to fetch image for {uuid}")
 
         # Fetch and save metadata
-        metadata_response = requests.get(metadata_url, headers=headers)
-        if metadata_response.status_code == 200:
-            with open(uuid_dir / "metadata.html", "w", encoding="utf-8") as f:
-                f.write(metadata_response.text)
-            _logger.info(f"Saved metadata for {uuid}")
+        meta_data_file_path = uuid_dir / "metadata.html"
+        if meta_data_file_path.exists():
+            _logger.info(f"Metadata already exists for {uuid}")
         else:
-            _logger.warning(f"Failed to fetch metadata for {uuid}")
+            metadata_response = requests.get(metadata_url, headers=headers)
+            if metadata_response.status_code == 200:
+                with open(, "w", encoding="utf-8") as f:
+                    f.write(metadata_response.text)
+                _logger.info(f"Saved metadata for {uuid}")
+            else:
+                _logger.warning(f"Failed to fetch metadata for {uuid}")
+                print(metadata_response.text)
+                print(metadata_response.status_code)
 
         # Save original JSON data
         with open(uuid_dir / "info.json", "w") as f:
