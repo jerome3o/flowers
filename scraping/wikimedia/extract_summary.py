@@ -54,7 +54,13 @@ def extract_summary_main(folder_path: Path):
         with open(html_file, "r") as f:
             html = f.read()
 
-        summary_content = extract_summary_content(html)
+        try:
+            summary_content = extract_summary_content(html)
+        except Exception as e:
+            _logger.error(
+                f"Failed to extract summary content for {current_folder}: {e}"
+            )
+            continue
 
         # Save the summary content as a JSON file
         summary_file = current_folder / "summary.json"
