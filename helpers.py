@@ -3,7 +3,7 @@ import logging
 import requests
 
 
-def setup_logging(file_name: str | None = None):
+def setup_logging(file_name: str = None):
     file_name = file_name or "flowers_general.log"
 
     logging.basicConfig(
