@@ -31,7 +31,7 @@ def fetch_and_save_images(json_file_path, output_dir):
         "Authorization": f"Bearer {WIKIMEDIA_ACCESS_TOKEN}",
     }
 
-    for uuid, item in data.items():
+    for uuid, item in list(data.items())[::-1]:
         image_url = item["url"]
         metadata_url = item["descriptionurl"]
 
