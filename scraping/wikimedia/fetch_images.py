@@ -18,6 +18,10 @@ def fetch_and_save_images(json_file_path, output_dir):
     output_dir = Path(output_dir)
     output_dir.mkdir(parents=True, exist_ok=True)
 
+    output_dir = Path(output_dir)
+
+    all_existing_files = {p.resolve() for p in output_dir.rglob("*")}
+
     # Read the JSON file
     with open(json_file_path, "r") as f:
         data = json.load(f)
@@ -40,7 +44,7 @@ def fetch_and_save_images(json_file_path, output_dir):
         image_extension = os.path.splitext(urlparse(image_url).path)[1]
         image_file_path = uuid_dir / f"image{image_extension}"
 
-        if image_file_path.exists():
+        if image_file_path in all_existing_files or image_file_path.exists():
             _logger.info(f"Image already exists for {uuid}")
         else:
             image_response = requests.get(image_url, headers=headers)
@@ -53,7 +57,7 @@ def fetch_and_save_images(json_file_path, output_dir):
 
         # Fetch and save metadata
         meta_data_file_path = uuid_dir / "metadata.html"
-        if meta_data_file_path.exists():
+        if meta_data_file_path in all_existing_files or meta_data_file_path.exists():
             _logger.info(f"Metadata already exists for {uuid}")
         else:
             metadata_response = requests.get(metadata_url)
@@ -85,6 +89,6 @@ if __name__ == "__main__":
         ],
     )
 
-    json_file_path = "./data/raw/info_dict.json"
-    output_dir = "./data/raw/images"
+    json_file_path = os.getenv("INFO_DICT_PATH", "./data/raw/info_dict.json")
+    output_dir = os.getenv("RAW_IMAGE_DIR", "./data/raw/images")
     fetch_and_save_images(json_file_path, output_dir)
