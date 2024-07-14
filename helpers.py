@@ -1,5 +1,19 @@
 from constants import NTFY_TOPIC, HOSTNAME
+import logging
 import requests
+
+
+def setup_logging(file_name: str | None = None):
+    file_name = file_name or "flowers_general.log"
+
+    logging.basicConfig(
+        level=logging.INFO,
+        format="%(asctime)s - %(name)s - %(levelname)s - %(message)s",
+        handlers=[
+            logging.FileHandler("file_name"),
+            logging.StreamHandler(),
+        ],
+    )
 
 
 def _ping_ntfy(message: str):

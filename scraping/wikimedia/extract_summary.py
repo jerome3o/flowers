@@ -5,7 +5,11 @@ import os
 import json
 from bs4 import BeautifulSoup
 
-from helpers import lmk
+from helpers import lmk, setup_logging
+
+import logging
+
+_logger = logging.getLogger(__name__)
 
 
 _RAW_IMAGE_DIR = os.getenv("RAW_IMAGE_DIR", "./data/raw/images")
@@ -41,7 +45,7 @@ def extract_summary_content(html: str) -> dict:
 @lmk
 def extract_summary_main(folder_path: Path):
 
-    for current_folder in folder_path.iterdir():
+    for i, current_folder in enumerate(folder_path.iterdir()):
         if not current_folder.is_dir():
             continue
 
@@ -58,11 +62,14 @@ def extract_summary_main(folder_path: Path):
         with open(summary_file, "w") as f:
             json.dump(summary_content, f, indent=4)
 
+        if i % 100 == 0:
+            print(f"Processed {i} folders")
+
 
 if __name__ == "__main__":
     import logging
 
-    logging.basicConfig(level=logging.INFO)
+    setup_logging("extract_summary.log")
 
     # Usage example
     extract_summary_main(Path(_RAW_IMAGE_DIR))
