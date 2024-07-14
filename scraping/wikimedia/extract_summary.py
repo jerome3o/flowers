@@ -5,6 +5,8 @@ import os
 import json
 from bs4 import BeautifulSoup
 
+from helpers import lmk
+
 
 _RAW_IMAGE_DIR = os.getenv("RAW_IMAGE_DIR", "./data/raw/images")
 
@@ -36,7 +38,8 @@ def extract_summary_content(html: str) -> dict:
     return summary_content
 
 
-def main(folder_path: Path):
+@lmk
+def extract_summary_main(folder_path: Path):
 
     for current_folder in folder_path.iterdir():
         if not current_folder.is_dir():
@@ -62,4 +65,4 @@ if __name__ == "__main__":
     logging.basicConfig(level=logging.INFO)
 
     # Usage example
-    main(Path(_RAW_IMAGE_DIR))
+    extract_summary_main(Path(_RAW_IMAGE_DIR))

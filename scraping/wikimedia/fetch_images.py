@@ -6,6 +6,8 @@ import time
 from urllib.parse import urlparse
 import logging
 
+from constants import JSON_FILE_PATH, RAW_IMAGE_DIR
+
 
 _logger = logging.getLogger(__name__)
 
@@ -88,7 +90,4 @@ if __name__ == "__main__":
             logging.StreamHandler(),
         ],
     )
-
-    json_file_path = os.getenv("INFO_DICT_PATH", "./data/raw/info_dict.json")
-    output_dir = os.getenv("RAW_IMAGE_DIR", "./data/raw/images")
-    fetch_and_save_images(json_file_path, output_dir)
+    fetch_and_save_images(JSON_FILE_PATH, RAW_IMAGE_DIR)
