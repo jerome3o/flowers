@@ -28,12 +28,11 @@ All the images were sourced by a search for "flowers" on Wikimedia Commons. But 
 sometimes result in images with "rose" in the title, but not actually of a rose.
 
 The assistant will not respond with text, however just make a function call to the submit_answer \
-function, with the answer and also it's confidence level (high, medium, low).
+function.
 
 The assistant will also provide a second answer, which is whether the image is of a single type of \
 flower, or if it contains multiple types of flowers. For example, a description like "A bouquet of \
-many flowers" would indicate multiple types of flowers. A confidence level should also be provided \
-for this answer.
+many flowers" would indicate multiple types of flowers.
 
 Finally, if the image is of a single type of flower, the assistant will provide the canonical \
 common name and scientific name of the flower. If the image is of multiple types of flowers, \
@@ -53,9 +52,7 @@ Confidence = Union[Literal["high"], Literal["medium"], Literal["low"]]
 
 class SubmitAnswerModel(BaseModel):
     is_flower: bool
-    is_flower_confidence: Confidence
     is_single_type_of_flower: bool
-    is_single_type_of_flower_confidence: Confidence
     common_name: str
     scientific_name: str
 
@@ -73,8 +70,6 @@ def _generate_message(metadata: dict) -> str:
 
 
 def _ask_claude(metadata: dict, client: Anthropic) -> SubmitAnswerModel:
-
-    print("calling claude")
     response = client.messages.create(
         system=_SYSTEM_PROMPT,
         model=MODEL,
